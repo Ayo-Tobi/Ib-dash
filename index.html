@@ -20,47 +20,41 @@ h1 { font-size:clamp(17px,4vw,22px); margin:0; color:var(--navy); letter-spacing
 .updated b { color:var(--navy); }
 .live { display:inline-block; width:7px; height:7px; border-radius:50%; background:#19b36b; margin-right:5px; animation:pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
-
-/* Sticky tab bar */
 nav.tabs { position:sticky; top:0; z-index:50; background:var(--bg); padding:8px 0 10px; margin:0 -14px; border-bottom:1px solid var(--line); }
 .tabstrip { display:flex; gap:6px; overflow-x:auto; padding:0 14px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
 .tabstrip::-webkit-scrollbar { display:none; }
 .tab { flex:0 0 auto; font-size:13px; font-weight:600; padding:8px 14px; border-radius:999px; border:1px solid #cdd4df; background:#fff; color:#33404f; cursor:pointer; white-space:nowrap; }
 .tab.active { background:var(--navy); border-color:var(--navy); color:#fff; }
 .tab .n { font-weight:400; opacity:.75; font-size:11.5px; }
-
 .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; margin:14px 0; }
 .stat { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
 .stat .n { font-size:19px; font-weight:700; color:var(--navy); }
 .stat .l { font-size:10.5px; color:var(--mut); text-transform:uppercase; letter-spacing:.4px; margin-top:1px; }
-
 .trend { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:10px; padding:12px 14px; margin-bottom:14px; }
 .trend h4 { margin:0 0 5px; font-size:13px; color:var(--navy); }
 .trend p { margin:0 0 6px; font-size:12.5px; color:#33404f; }
 .trend a { color:var(--link); font-size:11.5px; text-decoration:none; }
 .trend a:hover { text-decoration:underline; }
-
 .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
 select, input[type=search] { font-size:13px; padding:8px 10px; border:1px solid #cdd4df; border-radius:8px; background:#fff; color:var(--ink); }
 input[type=search] { flex:1 1 160px; min-width:0; }
-
 .count { font-size:11.5px; color:var(--mut); margin:0 0 8px 2px; }
-
-/* Deal cards (mobile-first) */
 .deal { background:var(--card); border:1px solid var(--line); border-radius:10px; margin-bottom:8px; overflow:hidden; }
 .dhead { display:flex; justify-content:space-between; gap:10px; padding:11px 13px; cursor:pointer; align-items:flex-start; }
 .dhead:hover { background:#f9fafc; }
 .dmain { min-width:0; }
 .tgt { font-weight:700; font-size:14px; color:var(--navy); }
-.acq { font-size:12.5px; color:#33404f; margin-top:1px; }
 .meta { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; align-items:center; }
 .tag { display:inline-block; font-size:10px; padding:2px 7px; border-radius:5px; font-weight:600; white-space:nowrap; }
 .s-Technology{background:#e8f0fe;color:#1a56db}.s-MediaTelecom{background:#fce8f3;color:#b4257a}
 .s-Industrials{background:#eef2e8;color:#5b7227}.s-BusinessServices{background:#fff4e5;color:#b56a00}
 .s-PowerUtilities{background:#e6f6f4;color:#0a7d6e}.s-Consumer{background:#f3e8ff;color:#7a3ad1}
 .rg { font-size:10.5px; color:var(--mut); }
-.dside { text-align:right; flex:0 0 auto; }
-.val { font-weight:700; font-size:13px; color:var(--navy); white-space:nowrap; }
+.dside { text-align:right; flex:0 0 auto; max-width:44%; }
+.vlbl { font-size:9px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; }
+.val { font-weight:700; font-size:13px; color:var(--navy); }
+.cons { font-size:12px; color:#33404f; margin-top:2px; }
+.rat { background:#fff; border:1px solid var(--line); border-left:3px solid var(--navy); border-radius:6px; padding:7px 10px; margin:0 0 9px; }
 .date { font-size:11px; color:var(--mut); margin-top:2px; white-space:nowrap; }
 .status { font-size:11px; color:var(--mut); margin-top:5px; }
 .status.dead { color:#a8071a; font-weight:600; }
@@ -79,7 +73,6 @@ a.src:hover { text-decoration:underline; }
 .empty { padding:28px; text-align:center; color:var(--mut); font-size:13px; background:var(--card); border:1px dashed #cdd4df; border-radius:10px; }
 .note { background:#fffbe6; border:1px solid #ffe58f; border-radius:8px; padding:9px 12px; font-size:11.5px; color:#614700; margin:0 0 12px; }
 footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); padding-top:12px; margin-top:20px; }
-
 @media (min-width:560px){ .wrap{padding:18px 20px 32px;} nav.tabs{margin:0 -20px;} .tabstrip{padding:0 20px;} }
 </style>
 </head>
@@ -92,14 +85,11 @@ footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); pad
     </div>
     <div class="updated"><span class="live"></span>Data as of <b id="updated"></b><br><span id="window"></span></div>
   </header>
-
   <nav class="tabs"><div class="tabstrip" id="tabs"></div></nav>
-
   <div class="stats" id="stats"></div>
   <div id="trend"></div>
-
   <div class="filters">
-    <input type="search" id="q" placeholder="Search target, acquirer, advisor…">
+    <input type="search" id="q" placeholder="Search target, acquirer, advisor, rationale…">
     <select id="region"><option value="">All regions</option></select>
     <select id="status">
       <option value="">All statuses</option>
@@ -109,15 +99,11 @@ footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); pad
     </select>
     <select id="year"><option value="">All dates</option></select>
   </div>
-
-  <div class="note"><b>Sourcing:</b> advisors &amp; consideration from press releases and SEC filings; multiples only where publicly disclosed (<i>n/d</i> = not disclosed). Entries marked "verify" or "upgrade to primary" are enriched on the weekly Wednesday run. Confirm breaking items in Bloomberg.</div>
-
+  <div class="note"><b>Sourcing:</b> advisors, consideration &amp; rationale from press releases, SEC filings and major financial press; multiples only where publicly disclosed (<i>n/d</i> = not disclosed). Value shown is EV where disclosed, otherwise best disclosed figure. Entries marked "verify" or "upgrade to primary" are enriched on the weekly Wednesday run. Confirm breaking items in Bloomberg.</div>
   <p class="count" id="count"></p>
   <div id="list"></div>
-
   <footer>Internal work product — Mars deal intelligence. Sources cited per deal. No investment advice.</footer>
 </div>
-
 <script>
 const DATA = {
   "lastUpdated": "2026-07-08",
@@ -138,7 +124,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "Herbert Smith Freehills Kramer (to Sky, per Global Legal Post; upgrade to primary)",
       "sourceName": "Sky Group press release",
-      "sourceUrl": "https://www.skygroup.sky/article/sky-agrees-to-acquire-itv-media-entertainment-creating-a-commercial-streaming-champion-for-the-uk"
+      "sourceUrl": "https://www.skygroup.sky/article/sky-agrees-to-acquire-itv-media-entertainment-creating-a-commercial-streaming-champion-for-the-uk",
+      "rationale": "Combines Sky's distribution and ad sales with ITVX to create a UK commercial streaming champion with scale against global platforms (per Sky release)."
     },
     {
       "date": "2026-07-06",
@@ -155,7 +142,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Fincantieri press release",
-      "sourceUrl": "https://www.fincantieri.com/en/newsroom/press-releases/2026/fincantieri-creates-an-international-underwater-champion-acquisition-of-four-companies-to-accelerate-growth-in-marine-drone-and-in-commercial-and-defense-underwater-activities-with-an-initial-expenditur-of-approzimately-euro-600-million"
+      "sourceUrl": "https://www.fincantieri.com/en/newsroom/press-releases/2026/fincantieri-creates-an-international-underwater-champion-acquisition-of-four-companies-to-accelerate-growth-in-marine-drone-and-in-commercial-and-defense-underwater-activities-with-an-initial-expenditur-of-approzimately-euro-600-million",
+      "rationale": "Creates an international underwater champion; accelerates Fincantieri's marine-drone and commercial/defense subsea capabilities (per Fincantieri release)."
     },
     {
       "date": "2026-07-02",
@@ -172,7 +160,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Ocean Yield / A.P. Moller Holding press release",
-      "sourceUrl": "https://www.oceanyield.no/investor-relations/press-releases/a-p-moller-holding-announces-the-acquisition-of-ocean-yield-from-kkr"
+      "sourceUrl": "https://www.oceanyield.no/investor-relations/press-releases/a-p-moller-holding-announces-the-acquisition-of-ocean-yield-from-kkr",
+      "rationale": "n/d (queued for weekly enrichment from filings)"
     },
     {
       "date": "2026-07-01",
@@ -189,7 +178,8 @@ const DATA = {
       "buyFin": "Morgan Stanley; Messier & Associés (to CMA CGM)",
       "buyLegal": "Cleary Gottlieb (to CMA CGM)",
       "sourceName": "FedEx investor relations",
-      "sourceUrl": "https://investors.fedex.com/news-and-events/investor-news/investor-news-details/2026/CMA-CGM-Group-to-Acquire-FedEx-Supply-Chain-at-an-Enterprise-Value-of-1-4-billion-Strengthening-Its-Logistics-Presence-in-North-America/default.aspx"
+      "sourceUrl": "https://investors.fedex.com/news-and-events/investor-news/investor-news-details/2026/CMA-CGM-Group-to-Acquire-FedEx-Supply-Chain-at-an-Enterprise-Value-of-1-4-billion-Strengthening-Its-Logistics-Presence-in-North-America/default.aspx",
+      "rationale": "Strengthens CMA CGM/CEVA's contract-logistics presence in North America (per FedEx release)."
     },
     {
       "date": "2026-07-01",
@@ -206,7 +196,8 @@ const DATA = {
       "buyFin": "RBC Capital Markets (exclusive, to Kroger)",
       "buyLegal": "Jones Day (to Kroger)",
       "sourceName": "Kroger investor relations / PR Newswire",
-      "sourceUrl": "https://ir.kroger.com/news/news-details/2026/Kroger-Announces-Agreement-to-Acquire-Giant-Eagle/default.aspx"
+      "sourceUrl": "https://ir.kroger.com/news/news-details/2026/Kroger-Announces-Agreement-to-Acquire-Giant-Eagle/default.aspx",
+      "rationale": "Kroger's first major grocery move since the Albertsons merger collapsed; adds regional density in Pennsylvania/Ohio markets."
     },
     {
       "date": "2026-07-01",
@@ -223,7 +214,8 @@ const DATA = {
       "buyFin": "Goldman Sachs Japan (to LY Corp/Bain); SBI Securities (tender agent)",
       "buyLegal": "n/d",
       "sourceName": "Reuters / Private Equity Wire",
-      "sourceUrl": "https://www.privateequitywire.co.uk/ly-and-bain-raise-kakaku-bid-to-4-1bn-valuation/"
+      "sourceUrl": "https://www.privateequitywire.co.uk/ly-and-bain-raise-kakaku-bid-to-4-1bn-valuation/",
+      "rationale": "Take-private contest for Japan's leading price-comparison and review platforms; LY Corp seeks domestic internet-media consolidation against a rival EQT bid."
     },
     {
       "date": "2026-06-30",
@@ -240,7 +232,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "Gibson Dunn & Crutcher (to KKR)",
       "sourceName": "KKR / Business Wire; Gibson Dunn",
-      "sourceUrl": "https://www.businesswire.com/news/home/20260630667572/en/KKR-to-Acquire-EDF-power-solutions-North-American-Operations-for-$4.2-Billion"
+      "sourceUrl": "https://www.businesswire.com/news/home/20260630667572/en/KKR-to-Acquire-EDF-power-solutions-North-American-Operations-for-$4.2-Billion",
+      "rationale": "Infrastructure capital acquiring a scaled North American renewables developer amid AI-driven load growth."
     },
     {
       "date": "2026-06-30",
@@ -257,7 +250,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence M&A tracker",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/largest-merger-acquisition-deals/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/largest-merger-acquisition-deals/",
+      "rationale": "n/d (queued for weekly enrichment from filings)"
     },
     {
       "date": "2026-06-29",
@@ -274,7 +268,8 @@ const DATA = {
       "buyFin": "Goldman Sachs (exclusive, to Martin Marietta)",
       "buyLegal": "Cravath, Swaine & Moore; Bredin Prat (to Martin Marietta)",
       "sourceName": "Martin Marietta investor relations",
-      "sourceUrl": "https://ir.martinmarietta.com/news-releases/news-release-details/martin-marietta-combine-lhoist-north-america-135-billion"
+      "sourceUrl": "https://ir.martinmarietta.com/news-releases/news-release-details/martin-marietta-combine-lhoist-north-america-135-billion",
+      "rationale": "Extends Martin Marietta from aggregates into lime and limestone specialty products; building-materials consolidation (per Martin Marietta release)."
     },
     {
       "date": "2026-06-29",
@@ -291,7 +286,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Private Equity Wire (deals)",
-      "sourceUrl": "https://www.privateequitywire.co.uk/content_channels/deals/"
+      "sourceUrl": "https://www.privateequitywire.co.uk/content_channels/deals/",
+      "rationale": "n/d (queued for weekly enrichment from filings)"
     },
     {
       "date": "2026-06-27",
@@ -308,7 +304,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Safran / Exail (AeroMorning)",
-      "sourceUrl": "https://aeromorning.com/en/safran-to-acquire-exail-technologies/"
+      "sourceUrl": "https://aeromorning.com/en/safran-to-acquire-exail-technologies/",
+      "rationale": "Adds naval drones and inertial navigation to Safran's defense electronics portfolio amid European rearmament."
     },
     {
       "date": "2026-06-26",
@@ -325,7 +322,8 @@ const DATA = {
       "buyFin": "n/a",
       "buyLegal": "n/a",
       "sourceName": "Bloomberg (via Private Equity Wire)",
-      "sourceUrl": "https://www.privateequitywire.co.uk/tpg-and-leonard-green-explore-sale-of-troon-golf/"
+      "sourceUrl": "https://www.privateequitywire.co.uk/tpg-and-leonard-green-explore-sale-of-troon-golf/",
+      "rationale": "Sponsor exit test: TPG and Leonard Green gauging buyer appetite for the largest golf-course management platform."
     },
     {
       "date": "2026-06-25",
@@ -342,7 +340,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "Freshfields US",
       "sourceName": "Adobe newsroom",
-      "sourceUrl": "https://news.adobe.com/news/2026/06/adobe-to-acquire-topaz-labs"
+      "sourceUrl": "https://news.adobe.com/news/2026/06/adobe-to-acquire-topaz-labs",
+      "rationale": "Brings AI image enhancement and upscaling models into Adobe's Creative Cloud stack (per Adobe release)."
     },
     {
       "date": "2026-06-25",
@@ -359,7 +358,8 @@ const DATA = {
       "buyFin": "Morgan Stanley (lead); J.P. Morgan",
       "buyLegal": "Skadden Arps",
       "sourceName": "onsemi / Synaptics press release",
-      "sourceUrl": "https://investor.onsemi.com/news-releases/news-release-details/onsemi-acquire-synaptics-enable-next-generation-intelligent"
+      "sourceUrl": "https://investor.onsemi.com/news-releases/news-release-details/onsemi-acquire-synaptics-enable-next-generation-intelligent",
+      "rationale": "Pairs onsemi's power/analog silicon with Synaptics' connectivity and sensing for edge-AI and automotive platforms (per joint release)."
     },
     {
       "date": "2026-06-24",
@@ -376,7 +376,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Qualcomm investor relations / Business Wire",
-      "sourceUrl": "https://investor.qualcomm.com/news-events/press-releases/news-details/2026/Qualcomm-to-Acquire-Modular/default.aspx"
+      "sourceUrl": "https://investor.qualcomm.com/news-events/press-releases/news-details/2026/Qualcomm-to-Acquire-Modular/default.aspx",
+      "rationale": "Qualcomm's answer to Nvidia's CUDA moat: an AI software stack to make its silicon programmable at scale."
     },
     {
       "date": "2026-06-23",
@@ -393,7 +394,8 @@ const DATA = {
       "buyFin": "Goldman Sachs (advisor, $250M financing & fairness opinion)",
       "buyLegal": "n/d",
       "sourceName": "Energy Fuels IR / PR Newswire",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/energy-fuels-announces-definitive-agreement-to-acquire-vac-for-1-9-billion-equity-value-302807538.html"
+      "sourceUrl": "https://www.prnewswire.com/news-releases/energy-fuels-announces-definitive-agreement-to-acquire-vac-for-1-9-billion-equity-value-302807538.html",
+      "rationale": "Vertically integrates rare-earth magnet production with Energy Fuels' REE oxides; Western critical-materials onshoring (per release)."
     },
     {
       "date": "2026-06-22",
@@ -410,7 +412,8 @@ const DATA = {
       "buyFin": "Allen & Company (lead); Morgan Stanley; Goldman Sachs",
       "buyLegal": "Weil, Gotshal & Manges",
       "sourceName": "Fox Corporation / PR Newswire",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/fox-corporation-to-acquire-roku-inc-302800220.html"
+      "sourceUrl": "https://www.prnewswire.com/news-releases/fox-corporation-to-acquire-roku-inc-302800220.html",
+      "rationale": "Marries Fox content and live sports with Roku's connected-TV distribution and advertising platform (per Fox release)."
     },
     {
       "date": "2026-06-19",
@@ -427,7 +430,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "MDA Space / PR Newswire",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/mda-space-announces-definitive-agreement-to-acquire-us-based-blue-canyon-technologies-llc-302805305.html"
+      "sourceUrl": "https://www.prnewswire.com/news-releases/mda-space-announces-definitive-agreement-to-acquire-us-based-blue-canyon-technologies-llc-302805305.html",
+      "rationale": "Adds US small-satellite buses and components to MDA Space's platform and expands US market access (per MDA release)."
     },
     {
       "date": "2026-06-16",
@@ -444,7 +448,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "CNBC",
-      "sourceUrl": "https://www.cnbc.com/2026/06/16/spacex-spcx-cursor-acquisition-ipo.html"
+      "sourceUrl": "https://www.cnbc.com/2026/06/16/spacex-spcx-cursor-acquisition-ipo.html",
+      "rationale": "Largest venture-backed exit ever; pairs Cursor's AI coding platform with SpaceX ahead of its IPO plans (per CNBC)."
     },
     {
       "date": "2026-06-08",
@@ -461,7 +466,8 @@ const DATA = {
       "buyFin": "J.P. Morgan",
       "buyLegal": "Hogan Lovells",
       "sourceName": "Ingredion IR / SEC 8-K",
-      "sourceUrl": "https://ir.ingredionincorporated.com/news-releases/news-release-details/ingredion-announces-recommended-all-cash-acquisition-tate-lyle"
+      "sourceUrl": "https://ir.ingredionincorporated.com/news-releases/news-release-details/ingredion-announces-recommended-all-cash-acquisition-tate-lyle",
+      "rationale": "Specialty-ingredients consolidation: scale in sweeteners and texturants (per Ingredion release)."
     },
     {
       "date": "2026-05-18",
@@ -478,7 +484,8 @@ const DATA = {
       "buyFin": "Lazard (lead); BofA Securities; Wells Fargo",
       "buyLegal": "Kirkland & Ellis",
       "sourceName": "NextEra newsroom / PR Newswire",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/nextera-energy-and-dominion-energy-to-combine-creating-the-worlds-largest-regulated-electric-utility-business-and-north-americas-premier-energy-infrastructure-platform-benefiting-customers-302774600.html"
+      "sourceUrl": "https://www.prnewswire.com/news-releases/nextera-energy-and-dominion-energy-to-combine-creating-the-worlds-largest-regulated-electric-utility-business-and-north-americas-premier-energy-infrastructure-platform-benefiting-customers-302774600.html",
+      "rationale": "Creates the world's largest regulated electric utility; scale for AI-era load growth and grid capex (per NextEra release)."
     },
     {
       "date": "2026-05-05",
@@ -495,7 +502,8 @@ const DATA = {
       "buyFin": "Morgan Stanley (to Lumen)",
       "buyLegal": "Latham & Watkins (to Lumen)",
       "sourceName": "Lumen investor relations",
-      "sourceUrl": "https://ir.lumen.com/news/news-details/2026/Lumen-to-Acquire-Alkira-Establishing-the-Control-Plane-for-Cloud-Connectivity/default.aspx"
+      "sourceUrl": "https://ir.lumen.com/news/news-details/2026/Lumen-to-Acquire-Alkira-Establishing-the-Control-Plane-for-Cloud-Connectivity/default.aspx",
+      "rationale": "Buys a cloud-networking control plane to compete for AI-era enterprise traffic (per Lumen release)."
     },
     {
       "date": "2026-04-26",
@@ -512,7 +520,8 @@ const DATA = {
       "buyFin": "Goldman Sachs (GIP/CalPERS/QIA); Citi (EQT)",
       "buyLegal": "Kirkland & Ellis (GIP consortium); Simpson Thacher & Bartlett (EQT)",
       "sourceName": "AES / PR Newswire",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/consortium-led-by-global-infrastructure-partners-and-eqt-agrees-to-acquire-aes-302700916.html"
+      "sourceUrl": "https://www.prnewswire.com/news-releases/consortium-led-by-global-infrastructure-partners-and-eqt-agrees-to-acquire-aes-302700916.html",
+      "rationale": "Infrastructure-fund take-private of a renewables and utilities platform; private capital chasing AI-driven power demand (per release)."
     },
     {
       "date": "2026-03-31",
@@ -529,7 +538,8 @@ const DATA = {
       "buyFin": "Citi; Rothschild & Co",
       "buyLegal": "Cleary Gottlieb; Hogan Lovells",
       "sourceName": "McCormick IR / Unilever",
-      "sourceUrl": "https://ir.mccormick.com/news-releases/news-release-details/mccormick-combine-unilevers-foods-business-creating-preeminent"
+      "sourceUrl": "https://ir.mccormick.com/news-releases/news-release-details/mccormick-combine-unilevers-foods-business-creating-preeminent",
+      "rationale": "Reverse Morris Trust creating a preeminent global flavors and foods platform; advances Unilever's portfolio focus (per McCormick release)."
     },
     {
       "date": "2026-03-30",
@@ -546,7 +556,8 @@ const DATA = {
       "buyFin": "Goldman Sachs; TD Securities",
       "buyLegal": "Paul Weiss; Jones Day (regulatory)",
       "sourceName": "Sysco investor relations",
-      "sourceUrl": "https://investors.sysco.com/annual-reports-and-sec-filings/news-releases/2026/03-30-2026-113036743"
+      "sourceUrl": "https://investors.sysco.com/annual-reports-and-sec-filings/news-releases/2026/03-30-2026-113036743",
+      "rationale": "Consolidates cash-and-carry foodservice distribution with Sysco's broadline scale (per Sysco release)."
     },
     {
       "date": "2026-02-27",
@@ -563,7 +574,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Paramount Skydance 8-K / SEC EDGAR",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0002041610/000110465926012401/tm2533570d50_ex99-1.htm"
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0002041610/000110465926012401/tm2533570d50_ex99-1.htm",
+      "rationale": "Consolidates studios and streaming under Paramount Skydance; won a contested process against Netflix, covering the $2.8B break fee (per 8-K)."
     },
     {
       "date": "2026-01-20",
@@ -580,7 +592,8 @@ const DATA = {
       "buyFin": "Moelis & Company; Wells Fargo",
       "buyLegal": "Skadden Arps",
       "sourceName": "Netflix press release; NBC News (outcome)",
-      "sourceUrl": "https://www.nbcnews.com/business/media/warner-bros-paramount-netflix-bid-rcna260442"
+      "sourceUrl": "https://www.nbcnews.com/business/media/warner-bros-paramount-netflix-bid-rcna260442",
+      "rationale": "Netflix sought WB's studio and streaming assets to add owned IP; superseded when PSKY's $31/share offer won the process (per press/SC 14D9)."
     },
     {
       "date": "2025-11-03",
@@ -597,7 +610,8 @@ const DATA = {
       "buyFin": "PJT Partners; J.P. Morgan (to Kimberly-Clark)",
       "buyLegal": "Kirkland & Ellis (lead); Gibson Dunn & Arnold & Porter (regulatory) (to Kimberly-Clark)",
       "sourceName": "Kimberly-Clark / PR Newswire",
-      "sourceUrl": "https://www.prnewswire.com/news-releases/kimberly-clark-to-acquire-kenvue-creating-a-32-billion-global-health-and-wellness-leader-302602379.html"
+      "sourceUrl": "https://www.prnewswire.com/news-releases/kimberly-clark-to-acquire-kenvue-creating-a-32-billion-global-health-and-wellness-leader-302602379.html",
+      "rationale": "Creates a consumer-health and personal-care giant; scale and portfolio breadth across daily-use brands."
     },
     {
       "date": "2025-10-27",
@@ -614,7 +628,8 @@ const DATA = {
       "buyFin": "BofA Securities (exclusive)",
       "buyLegal": "Skadden Arps",
       "sourceName": "American Water / SEC S-4",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001410636/000119312525321389/d15683dex991.htm"
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001410636/000119312525321389/d15683dex991.htm",
+      "rationale": "Largest US water-utility combination; regulated scale and rate-base growth (per S-4)."
     },
     {
       "date": "2025-09-29",
@@ -631,7 +646,8 @@ const DATA = {
       "buyFin": "J.P. Morgan Securities (consortium)",
       "buyLegal": "Kirkland & Ellis (PIF, lead); Gibson Dunn & Crutcher (PIF); Latham & Watkins & Simpson Thacher (Silver Lake); Sidley Austin (Affinity Partners)",
       "sourceName": "EA investor relations",
-      "sourceUrl": "https://ir.ea.com/press-releases/press-release-details/2025/EA-Announces-Agreement-to-be-Acquired-by-PIF-Silver-Lake-and-Affinity-Partners-for-55-Billion/default.aspx"
+      "sourceUrl": "https://ir.ea.com/press-releases/press-release-details/2025/EA-Announces-Agreement-to-be-Acquired-by-PIF-Silver-Lake-and-Affinity-Partners-for-55-Billion/default.aspx",
+      "rationale": "Largest LBO in history; take-private of premier game IP aligned with PIF's gaming strategy (per EA release)."
     },
     {
       "date": "2025-09-08",
@@ -648,7 +664,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "EchoStar 8-K / SEC EDGAR",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001415404/000141540425000041/tmb-20250907xex99d1.htm"
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001415404/000141540425000041/tmb-20250907xex99d1.htm",
+      "rationale": "n/d (queued for weekly enrichment from filings)"
     },
     {
       "date": "2025-08-26",
@@ -665,7 +682,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "EchoStar 8-K / SEC EDGAR",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001415404/000141540425000035/tmb-20250825xex99.htm"
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001415404/000141540425000035/tmb-20250825xex99.htm",
+      "rationale": "n/d (queued for weekly enrichment from filings)"
     },
     {
       "date": "2025-08-25",
@@ -682,7 +700,8 @@ const DATA = {
       "buyFin": "n/d (Sullivan & Cromwell advised KDP's financial adviser; name in KDP release, verify)",
       "buyLegal": "Paul, Weiss (to KDP)",
       "sourceName": "Keurig Dr Pepper press release",
-      "sourceUrl": "https://news.keurigdrpepper.com/2025-08-25-Keurig-Dr-Pepper-to-Acquire-JDE-Peets-and-Subsequently-Separate-into-Two-Independent-Companies-a-Leading-Refreshment-Beverage-Player-and-a-Global-Coffee-Champion"
+      "sourceUrl": "https://news.keurigdrpepper.com/2025-08-25-Keurig-Dr-Pepper-to-Acquire-JDE-Peets-and-Subsequently-Separate-into-Two-Independent-Companies-a-Leading-Refreshment-Beverage-Player-and-a-Global-Coffee-Champion",
+      "rationale": "Global coffee consolidation; KDP to separate into coffee and refreshment companies post-close."
     },
     {
       "date": "2025-08-19",
@@ -699,7 +718,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Nexstar Media Group closing press release",
-      "sourceUrl": "https://www.nexstar.tv/nexstar-media-group-inc-closes-acquisition-of-tegna-inc/"
+      "sourceUrl": "https://www.nexstar.tv/nexstar-media-group-inc-closes-acquisition-of-tegna-inc/",
+      "rationale": "Local-broadcast consolidation premised on FCC ownership deregulation."
     },
     {
       "date": "2025-07-28",
@@ -716,7 +736,8 @@ const DATA = {
       "buyFin": "Goldman Sachs; Centerview Partners",
       "buyLegal": "n/d (Davis Polk advised on acquisition financing)",
       "sourceName": "Baker Hughes investor relations",
-      "sourceUrl": "https://investors.bakerhughes.com/news/press-releases/news-details/2025/Baker-Hughes-to-Acquire-Chart-Industries-Accelerating-Energy-Industrial-Technology-Strategy-07-29-2025/default.aspx"
+      "sourceUrl": "https://investors.bakerhughes.com/news/press-releases/news-details/2025/Baker-Hughes-to-Acquire-Chart-Industries-Accelerating-Energy-Industrial-Technology-Strategy-07-29-2025/default.aspx",
+      "rationale": "Adds LNG and cryogenic equipment to Baker Hughes' gas-technology portfolio; energy and industrial technology scale (per release)."
     },
     {
       "date": "2025-07-10",
@@ -733,7 +754,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Food Dive (deal tracker) — upgrade to primary on next run",
-      "sourceUrl": "https://www.fooddive.com/news/food-beverage-ma-deals-2025/808539/"
+      "sourceUrl": "https://www.fooddive.com/news/food-beverage-ma-deals-2025/808539/",
+      "rationale": "Ferrero diversifies beyond confectionery into North American cereal with iconic brands."
     },
     {
       "date": "2025-07-07",
@@ -750,7 +772,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "CoreWeave 8-K / SEC EDGAR (verify exhibit covers termination)",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001769628/000095010325014006/dp236631_ex9901.htm"
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0001769628/000095010325014006/dp236631_ex9901.htm",
+      "rationale": "Vertical integration of contracted data-center power and capacity for AI compute."
     },
     {
       "date": "2025-07-07",
@@ -767,7 +790,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "WWT tech M&A review — upgrade to primary on next run",
-      "sourceUrl": "https://www.wwt.com/news/the-10-biggest-tech-manda-deals-of-2025"
+      "sourceUrl": "https://www.wwt.com/news/the-10-biggest-tech-manda-deals-of-2025",
+      "rationale": "Agentic-AI-driven BPO consolidation; scale in business process services."
     },
     {
       "date": "2025-05-27",
@@ -784,7 +808,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "CIO enterprise tech M&A tracker — upgrade to primary on next run",
-      "sourceUrl": "https://www.cio.com/article/196371/the-biggest-enterprise-technology-ma-deals.html"
+      "sourceUrl": "https://www.cio.com/article/196371/the-biggest-enterprise-technology-ma-deals.html",
+      "rationale": "Data management and MDM foundation for Salesforce's agentic AI stack."
     },
     {
       "date": "2025-05-19",
@@ -801,7 +826,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Mergermarket / ION Analytics — upgrade to primary on next run",
-      "sourceUrl": "https://ionanalytics.com/insights/mergermarket/power-deals-drive-surge-in-north-america-natural-resources-ma/"
+      "sourceUrl": "https://ionanalytics.com/insights/mergermarket/power-deals-drive-surge-in-north-america-natural-resources-ma/",
+      "rationale": "Private infrastructure capital acquiring regulated utility exposure to Southwest load growth."
     },
     {
       "date": "2025-05-16",
@@ -818,7 +844,8 @@ const DATA = {
       "buyFin": "Citi; LionTree (Charter)",
       "buyLegal": "Wachtell, Lipton, Rosen & Katz (Charter)",
       "sourceName": "Charter Communications newsroom",
-      "sourceUrl": "https://corporate.charter.com/newsroom/charter-communications-and-cox-communications-announce-definitive-agreement-to-combine-companies"
+      "sourceUrl": "https://corporate.charter.com/newsroom/charter-communications-and-cox-communications-announce-definitive-agreement-to-combine-companies",
+      "rationale": "Cable consolidation for broadband scale against fiber and fixed-wireless competition (per joint release)."
     },
     {
       "date": "2025-05-15",
@@ -835,7 +862,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "KPMG consumer & retail M&A review — upgrade to primary on next run",
-      "sourceUrl": "https://kpmg.com/xx/en/our-insights/value-creation/is-the-dust-finally-settling.html"
+      "sourceUrl": "https://kpmg.com/xx/en/our-insights/value-creation/is-the-dust-finally-settling.html",
+      "rationale": "Consolidates US sporting-goods retail and adds global footprint via Foot Locker's international stores."
     },
     {
       "date": "2025-05-12",
@@ -852,7 +880,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Mergermarket / ION Analytics — upgrade to primary on next run",
-      "sourceUrl": "https://ionanalytics.com/insights/mergermarket/power-deals-drive-surge-in-north-america-natural-resources-ma/"
+      "sourceUrl": "https://ionanalytics.com/insights/mergermarket/power-deals-drive-surge-in-north-america-natural-resources-ma/",
+      "rationale": "Roughly doubles NRG's generation fleet with ~13 GW of gas amid tightening power markets."
     },
     {
       "date": "2025-05-05",
@@ -869,7 +898,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "KPMG consumer & retail M&A review — upgrade to primary on next run",
-      "sourceUrl": "https://kpmg.com/xx/en/our-insights/value-creation/is-the-dust-finally-settling.html"
+      "sourceUrl": "https://kpmg.com/xx/en/our-insights/value-creation/is-the-dust-finally-settling.html",
+      "rationale": "3G Capital take-private of a global footwear franchise; founding family retains leadership."
     },
     {
       "date": "2025-04-22",
@@ -886,7 +916,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Janes Capital A&D M&A review — upgrade to primary on next run",
-      "sourceUrl": "https://blog.janescapital.com/key-insights/top-5-largest-aerospace-defense-ma-deals-1h-2025"
+      "sourceUrl": "https://blog.janescapital.com/key-insights/top-5-largest-aerospace-defense-ma-deals-1h-2025",
+      "rationale": "Boeing deleveraging via non-core software carve-out (Jeppesen, ForeFlight); sponsor buys aviation-data platform."
     },
     {
       "date": "2025-04-21",
@@ -903,7 +934,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "MergersAndAcquisitions.net professional services review — upgrade to primary on next run",
-      "sourceUrl": "https://mergersandacquisitions.net/insights/professional-services-mergers-and-acquisitions"
+      "sourceUrl": "https://mergersandacquisitions.net/insights/professional-services-mergers-and-acquisitions",
+      "rationale": "PE-backed CPA consolidation; creates the sixth largest US advisory firm."
     },
     {
       "date": "2025-03-18",
@@ -920,7 +952,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "WWT tech M&A review — upgrade to primary on next run",
-      "sourceUrl": "https://www.wwt.com/news/the-10-biggest-tech-manda-deals-of-2025"
+      "sourceUrl": "https://www.wwt.com/news/the-10-biggest-tech-manda-deals-of-2025",
+      "rationale": "Largest deal in Alphabet history; multicloud security platform to strengthen Google Cloud's enterprise position."
     },
     {
       "date": "2025-03-17",
@@ -937,7 +970,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Food Dive (deal tracker) — upgrade to primary on next run",
-      "sourceUrl": "https://www.fooddive.com/news/food-beverage-ma-deals-2025/808539/"
+      "sourceUrl": "https://www.fooddive.com/news/food-beverage-ma-deals-2025/808539/",
+      "rationale": "Bolt-on of a fast-growing prebiotic soda brand; entry into functional beverages."
     },
     {
       "date": "2025-01-27",
@@ -954,7 +988,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "CIO enterprise tech M&A tracker — upgrade to primary on next run",
-      "sourceUrl": "https://www.cio.com/article/196371/the-biggest-enterprise-technology-ma-deals.html"
+      "sourceUrl": "https://www.cio.com/article/196371/the-biggest-enterprise-technology-ma-deals.html",
+      "rationale": "Buy-in of the remaining minority completes Emerson's industrial-software consolidation."
     },
     {
       "date": "2025-01-10",
@@ -971,7 +1006,8 @@ const DATA = {
       "buyFin": "Lazard; J.P. Morgan (to Constellation) — verify vs. proxy",
       "buyLegal": "Kirkland & Ellis (to Constellation) — verify vs. proxy",
       "sourceName": "Utility Dive",
-      "sourceUrl": "https://www.utilitydive.com/news/constellation-acquires-calpine-in-164b-mega-deal/737012/"
+      "sourceUrl": "https://www.utilitydive.com/news/constellation-acquires-calpine-in-164b-mega-deal/737012/",
+      "rationale": "Creates the largest US competitive generation fleet across nuclear, gas and geothermal; scale to serve data-center demand (per release)."
     },
     {
       "date": "2025-01-07",
@@ -988,7 +1024,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2025",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2025/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2025/",
+      "rationale": "HCM consolidation; extends Paychex upmarket with modern payroll and talent software."
     },
     {
       "date": "2024-12-09",
@@ -1005,7 +1042,8 @@ const DATA = {
       "buyFin": "PJT Partners (to Omnicom)",
       "buyLegal": "Latham & Watkins (to Omnicom)",
       "sourceName": "Omnicom 8-K / SEC EDGAR",
-      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0000029989/000119312524272904/d863026dex991.htm"
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/0000029989/000119312524272904/d863026dex991.htm",
+      "rationale": "Creates the world's largest ad holding company; scale plus first-party data assets against platform disruption (per 8-K)."
     },
     {
       "date": "2024-11-19",
@@ -1022,7 +1060,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Global consumer and healthcare packaging consolidation; scale and cost synergies."
     },
     {
       "date": "2024-10-30",
@@ -1039,7 +1078,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Extends Siemens Xcelerator with simulation and AI-driven engineering software."
     },
     {
       "date": "2024-10-01",
@@ -1056,7 +1096,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "ADNOC/XRG diversification into performance chemicals; largest Gulf takeover of a German company."
     },
     {
       "date": "2024-09-30",
@@ -1073,7 +1114,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Capacity Media telecom M&A review",
-      "sourceUrl": "https://capacityglobal.com/news/telco-m-a-north-america-2024/"
+      "sourceUrl": "https://capacityglobal.com/news/telco-m-a-north-america-2024/",
+      "rationale": "Attempted pay-TV consolidation to manage secular decline; collapsed when bondholders rejected the required debt exchange."
     },
     {
       "date": "2024-09-24",
@@ -1090,7 +1132,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Sponsor take-private of collaborative work management SaaS at scale."
     },
     {
       "date": "2024-09-05",
@@ -1107,7 +1150,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Verizon reacquires fiber footprint to accelerate its fiber strategy against cable and fixed wireless."
     },
     {
       "date": "2024-09-04",
@@ -1124,7 +1168,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Largest APAC data-center platform; hyperscale and AI capacity land-grab."
     },
     {
       "date": "2024-08-19",
@@ -1141,7 +1186,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "CIO enterprise tech M&A tracker — upgrade to primary on next run",
-      "sourceUrl": "https://www.cio.com/article/196371/the-biggest-enterprise-technology-ma-deals.html"
+      "sourceUrl": "https://www.cio.com/article/196371/the-biggest-enterprise-technology-ma-deals.html",
+      "rationale": "AI rack-scale systems design capability to compete with Nvidia; manufacturing arm later divested to stay fabless."
     },
     {
       "date": "2024-08-14",
@@ -1158,7 +1204,8 @@ const DATA = {
       "buyFin": "Citi (to Mars)",
       "buyLegal": "Skadden Arps (to Mars)",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Builds Mars' global snacking scale with Pringles and Cheez-It; brand portfolio breadth."
     },
     {
       "date": "2024-08-01",
@@ -1175,7 +1222,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Sponsor take-private of a healthcare revenue-cycle management platform."
     },
     {
       "date": "2024-07-11",
@@ -1192,7 +1240,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence M&A tracker",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/largest-merger-acquisition-deals/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/largest-merger-acquisition-deals/",
+      "rationale": "Take-private of a wealth-management technology platform serving RIAs and broker-dealers."
     },
     {
       "date": "2024-07-07",
@@ -1209,7 +1258,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "Latham & Watkins (to Skydance)",
       "sourceName": "TheWrap media M&A recap — upgrade to primary on next run",
-      "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/"
+      "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/",
+      "rationale": "Recapitalizes Paramount and hands Ellison control via National Amusements; studio and streaming turnaround thesis."
     },
     {
       "date": "2024-07-01",
@@ -1226,7 +1276,8 @@ const DATA = {
       "buyFin": "n/d",
       "buyLegal": "n/d",
       "sourceName": "Intellizence top-10 2024",
-      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/"
+      "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/",
+      "rationale": "Vertical re-integration of fuselage supply after quality crises; Airbus takes select European sites in parallel (per release)."
     }
   ],
   "trends": [
@@ -1278,7 +1329,6 @@ let tab = "All", q = "", region = "", statusF = "", year = "";
 document.getElementById("updated").textContent = DATA.lastUpdated;
 document.getElementById("window").textContent = DATA.windowDescription.split(",")[0];
 
-// Tabs
 const tabsEl = document.getElementById("tabs");
 ["All", ...SECTORS].forEach(s => {
   const n = s === "All" ? DATA.deals.length : DATA.deals.filter(d => d.sector === s).length;
@@ -1289,7 +1339,6 @@ const tabsEl = document.getElementById("tabs");
   tabsEl.appendChild(b);
 });
 
-// Filter options
 const regions = [...new Set(DATA.deals.map(d => (d.region||"").split(" (")[0]))].filter(Boolean).sort();
 regions.forEach(r => { const o=document.createElement("option"); o.value=r; o.textContent=r; document.getElementById("region").appendChild(o); });
 const years = [...new Set(DATA.deals.map(d => d.date.slice(0,4)))].sort().reverse();
@@ -1302,7 +1351,6 @@ document.getElementById("year").onchange = e => { year = e.target.value; render(
 
 const isDead = d => /terminat|withdraw|abandon|collaps|rejected/i.test(d.status);
 const isClosed = d => !isDead(d) && /^closed|closed /i.test(d.status.trim());
-
 function bucket(d){ return isDead(d) ? "dead" : (isClosed(d) ? "closed" : "live"); }
 
 function filtered(){
@@ -1311,7 +1359,7 @@ function filtered(){
     (!region || (d.region||"").startsWith(region)) &&
     (!statusF || bucket(d) === statusF) &&
     (!year || d.date.startsWith(year)) &&
-    (!q || [d.target,d.acquirer,d.sellFin,d.sellLegal,d.buyFin,d.buyLegal,d.value,d.status].join(" ").toLowerCase().includes(q))
+    (!q || [d.target,d.acquirer,d.sellFin,d.sellLegal,d.buyFin,d.buyLegal,d.value,d.status,d.rationale||""].join(" ").toLowerCase().includes(q))
   );
 }
 
@@ -1336,20 +1384,26 @@ function trend(){
 
 function card(d,i){
   const dead = isDead(d);
+  const headline = /^n\/d/.test(d.acquirer)
+    ? esc(d.target) + ' — sale process underway'
+    : esc(d.acquirer) + ' acquires ' + esc(d.target);
+  const consShort = esc((d.consideration||'n/d').split(' (')[0]);
   return '<div class="deal" id="deal'+i+'">'+
     '<div class="dhead" onclick="document.getElementById(\'deal'+i+'\').classList.toggle(\'open\')">'+
-      '<div class="dmain"><div class="tgt">'+esc(d.target)+'</div><div class="acq">← '+esc(d.acquirer)+'</div>'+
+      '<div class="dmain"><div class="tgt">'+headline+'</div>'+
+        '<div class="cons">'+consShort+'</div>'+
         '<div class="meta"><span class="tag '+sKey(d.sector)+'">'+esc(d.sector)+'</span><span class="rg">'+esc(d.region)+'</span></div>'+
         '<div class="status'+(dead?' dead':'')+'">'+esc(d.status)+'</div></div>'+
-      '<div class="dside"><div class="val">'+esc(d.value)+'</div><div class="date">'+esc(d.date)+'</div></div>'+
+      '<div class="dside"><div class="vlbl">Value / EV (as disclosed)</div><div class="val">'+esc(d.value)+'</div><div class="date">'+esc(d.date)+'</div></div>'+
       '<div class="chev">▶</div>'+
     '</div>'+
     '<div class="dbody">'+
+      '<div class="rat"><b>Rationale:</b> '+esc(d.rationale||'n/d')+'</div>'+
       '<div class="advgrid">'+
         '<div class="advcell"><h5>Sell-side</h5><div class="fin">'+esc(d.sellFin)+'</div><div class="leg">'+esc(d.sellLegal)+'</div></div>'+
         '<div class="advcell"><h5>Buy-side</h5><div class="fin">'+esc(d.buyFin)+'</div><div class="leg">'+esc(d.buyLegal)+'</div></div>'+
       '</div>'+
-      '<div class="kv"><b>Consideration:</b> '+esc(d.consideration)+'</div>'+
+      '<div class="kv"><b>Consideration (full):</b> '+esc(d.consideration)+'</div>'+
       '<div class="kv"><b>Multiple:</b> '+esc(d.multiple)+'</div>'+
       '<div class="kv"><b>Source:</b> <a class="src" href="'+esc(d.sourceUrl)+'" target="_blank" rel="noopener">'+esc(d.sourceName)+'</a></div>'+
     '</div>'+
