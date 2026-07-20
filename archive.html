@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IB Deal Command — Deal Archive</title>
+<style>
+:root { color-scheme: light;
+  --navy:#0f2747; --ink:#1a1f29; --mut:#5b6675; --line:#e3e7ee;
+  --bg:#f6f7f9; --card:#fff; --link:#1a56db; --gold:#b78b2e;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.45; }
+.wrap { max-width:1280px; margin:0 auto; padding:14px 14px 28px; }
+h1 { font-size:clamp(17px,4vw,22px); margin:0; color:var(--navy); }
+.sub { font-size:12px; color:var(--mut); margin:3px 0 14px; }
+.sub a { color:var(--link); text-decoration:none; font-weight:600; }
+.filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+select, input[type=search] { font-size:13px; padding:8px 10px; border:1px solid #cdd4df; border-radius:8px; background:#fff; color:var(--ink); }
+input[type=search] { flex:1 1 160px; min-width:0; }
+.count { font-size:11.5px; color:var(--mut); margin:0 0 8px 2px; }
+.tag { display:inline-block; font-size:10px; padding:2px 7px; border-radius:5px; font-weight:600; white-space:nowrap; background:#eef1f6; color:#33404f; }
+.s-Technology{background:#e8f0fe;color:#1a56db}.s-MediaTelecom{background:#fce8f3;color:#b4257a}
+.s-Industrials{background:#eef2e8;color:#5b7227}.s-BusinessServices{background:#fff4e5;color:#b56a00}
+.s-PowerUtilities{background:#e6f6f4;color:#0a7d6e}.s-Consumer{background:#f3e8ff;color:#7a3ad1}
+.s-Healthcare{background:#ffe9ec;color:#c22a3d}.s-Infrastructure{background:#e9f2e6;color:#2e7d32}
+.tblwrap { overflow-x:auto; background:var(--card); border:1px solid var(--line); border-radius:10px; }
+table { border-collapse:collapse; width:100%; font-size:12px; min-width:760px; }
+th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--mut); padding:8px 10px; border-bottom:1px solid var(--line); background:var(--card); white-space:nowrap; }
+td { padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+tr:hover td { background:#f9fafc; }
+.t { font-weight:600; color:var(--navy); }
+a.src { color:var(--link); text-decoration:none; }
+.empty { padding:28px; text-align:center; color:var(--mut); font-size:13px; background:var(--card); border:1px dashed #cdd4df; border-radius:10px; }
+footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); padding-top:12px; margin-top:20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Deal Archive</h1>
+  <div class="sub">Deals aged out of the rolling 24-month window · nothing is deleted · <a href="index.html">← Back to live dashboard</a></div>
+  <div class="filters">
+    <input type="search" id="q" placeholder="Search target, acquirer, advisor…">
+    <select id="sector"><option value="">All sectors</option></select>
+    <select id="year"><option value="">All years</option></select>
+  </div>
+  <p class="count" id="count"></p>
+  <div id="list"></div>
+  <footer>Internal work product — Mars deal intelligence. Sources cited per deal. No investment advice.</footer>
+</div>
+<script>
+const DATA = {"description": "Deals aged out of the rolling 24-month window. Never deleted.", "deals": [{"date": "2024-07-07", "target": "Paramount Global", "acquirer": "Skydance Media (Ellison family / RedBird Capital)", "sector": "Media & Telecom", "region": "North America", "value": "~$8B transaction (incl. $2.4B for National Amusements + $4.5B to shareholders + $1.5B balance sheet)", "consideration": "Cash & stock (two-step merger)", "multiple": "n/d", "status": "Closed Aug 2025 (renamed Paramount Skydance); retained past 24-month window as strategically instructive (predicate to WBD bid)", "sellFin": "Centerview Partners (Paramount special committee)", "sellLegal": "Cravath, Swaine & Moore (special committee)", "buyFin": "n/d", "buyLegal": "Latham & Watkins (to Skydance)", "sourceName": "TheWrap media M&A recap — upgrade to primary on next run", "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/", "rationale": "Recapitalizes Paramount and hands Ellison control via National Amusements; studio and streaming turnaround thesis."}, {"date": "2024-07-01", "target": "Spirit AeroSystems", "acquirer": "The Boeing Company", "sector": "Industrials", "region": "North America", "value": "$4.7B equity ($37.25/share; ~$8.3B incl. assumed debt)", "consideration": "All-stock (Airbus taking select European sites in parallel)", "multiple": "n/d", "status": "Closed 2025 (vertical re-integration of fuselage supply); retained past 24-month window as strategically instructive", "sellFin": "n/d", "sellLegal": "n/d", "buyFin": "n/d", "buyLegal": "n/d", "sourceName": "Intellizence top-10 2024", "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/", "rationale": "Vertical re-integration of fuselage supply after quality crises; Airbus takes select European sites in parallel (per release)."}], "lastUpdated": "2026-07-19", "count": 2};
+const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const sKey = s => "s-" + s.replace(/[^A-Za-z]/g,"");
+let q = "", sector = "", year = "";
+
+const sectors = [...new Set(DATA.deals.map(d => d.sector))].sort();
+sectors.forEach(s => { const o=document.createElement("option"); o.value=s; o.textContent=s; document.getElementById("sector").appendChild(o); });
+const years = [...new Set(DATA.deals.map(d => d.date.slice(0,4)))].sort().reverse();
+years.forEach(y => { const o=document.createElement("option"); o.value=y; o.textContent=y; document.getElementById("year").appendChild(o); });
+
+document.getElementById("q").oninput = e => { q = e.target.value.toLowerCase(); render(); };
+document.getElementById("sector").onchange = e => { sector = e.target.value; render(); };
+document.getElementById("year").onchange = e => { year = e.target.value; render(); };
+
+function render(){
+  const rows = DATA.deals.filter(d =>
+    (!sector || d.sector === sector) &&
+    (!year || d.date.startsWith(year)) &&
+    (!q || [d.target,d.acquirer,d.sellFin,d.sellLegal,d.buyFin,d.buyLegal,d.value,d.status].join(" ").toLowerCase().includes(q))
+  );
+  document.getElementById("count").textContent = rows.length + " archived transaction" + (rows.length===1?"":"s");
+  if (!rows.length) { document.getElementById("list").innerHTML = '<div class="empty">Archive is empty or no deals match.</div>'; return; }
+  const tr = rows.map(d =>
+    '<tr><td style="white-space:nowrap">'+esc(d.date)+'</td>'+
+    '<td class="t">'+(/^n\/d/.test(d.acquirer) ? esc(d.target) : esc(d.acquirer)+' / '+esc(d.target))+'</td>'+
+    '<td><span class="tag '+sKey(d.sector)+'">'+esc(d.sector)+'</span></td>'+
+    '<td style="white-space:nowrap">'+esc(d.region)+'</td>'+
+    '<td>'+esc(d.value)+'</td>'+
+    '<td>'+esc(d.status)+'</td>'+
+    '<td><a class="src" href="'+esc(d.sourceUrl)+'" target="_blank" rel="noopener">src</a></td></tr>'
+  ).join("");
+  document.getElementById("list").innerHTML =
+    '<div class="tblwrap"><table><thead><tr><th>Date</th><th>Deal</th><th>Sector</th><th>Region</th><th>Value</th><th>Status</th><th>Src</th></tr></thead><tbody>'+tr+'</tbody></table></div>';
+}
+render();
+</script>
+</body>
+</html>
