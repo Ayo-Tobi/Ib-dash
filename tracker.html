@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Tracker — MD Global Partners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0B0E; --panel: #131519; --panel-raised: #1A1D23;
+    --line: rgba(255,255,255,0.07); --line-soft: rgba(255,255,255,0.045);
+    --platinum: #C7CBD3; --platinum-dim: rgba(199,203,211,0.08);
+    --text-hi: #F3F3F2; --text-mid: #9396A0; --text-low: #54565F;
+    --up: #7DD6A8; --down: #E58B8B; --warm: #D6A878;
+    --accent-cr: #6BA8D6; --accent-ma: #A878D6;
+    --header-h: 64px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg); color: var(--text-hi);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased; min-height: 100vh;
+  }
+  .header {
+    position: sticky; top: 0; z-index: 100; height: var(--header-h);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    background: rgba(10,11,14,0.85);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .icon-btn {
+    width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: 1px solid transparent; border-radius: 8px;
+    color: var(--text-mid); cursor: pointer; text-decoration: none;
+    transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+  }
+  .icon-btn:hover { background: var(--platinum-dim); border-color: var(--line); color: var(--text-hi); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .brand-mark { display: flex; align-items: baseline; font-weight: 700; font-size: 20px; letter-spacing: -0.03em; color: var(--text-hi); user-select: none; }
+  .brand-mark .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--platinum), var(--warm)); margin-left: 2px; box-shadow: 0 0 6px rgba(214,168,120,0.5); }
+  .page-title { font-size: 14px; font-weight: 600; color: var(--text-mid); margin-left: 4px; }
+  .header-spacer { flex: 1; }
+  .signout { font-size: 12px; color: var(--text-mid); background: none; border: 1px solid var(--line); border-radius: 7px; padding: 7px 12px; cursor: pointer; font-family: inherit; }
+  .signout:hover { color: var(--text-hi); background: var(--platinum-dim); }
+
+  .main { padding: 28px 24px 60px; max-width: 1480px; margin: 0 auto; }
+
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .tab-btn {
+    padding: 9px 18px; background: transparent; border: none;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text-mid);
+    cursor: pointer; display: flex; align-items: center; gap: 7px;
+    transition: color 140ms ease, border-color 140ms ease;
+  }
+  .tab-btn:hover { color: var(--text-hi); }
+  .tab-btn.active { color: var(--text-hi); border-bottom-color: var(--platinum); }
+  .tab-btn.active[data-tab="cap_raise"] { color: var(--accent-cr); border-bottom-color: var(--accent-cr); }
+  .tab-btn.active[data-tab="ma"] { color: var(--accent-ma); border-bottom-color: var(--accent-ma); }
+  .tab-btn.active[data-tab="archive"] { color: var(--warm); border-bottom-color: var(--warm); }
+  .tab-count { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 10px; background: var(--platinum-dim); color: var(--text-mid); }
+  .tab-btn.active[data-tab="cap_raise"] .tab-count { background: rgba(107,168,214,0.15); color: var(--accent-cr); }
+  .tab-btn.active[data-tab="ma"] .tab-count { background: rgba(168,120,214,0.15); color: var(--accent-ma); }
+  .tab-btn.active[data-tab="archive"] .tab-count { background: rgba(214,168,120,0.15); color: var(--warm); }
+  .archive-note { font-size: 11px; color: var(--text-low); margin: -8px 0 14px; }
+
+  .filters-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; padding: 16px;
+    background: linear-gradient(180deg, var(--panel) 0%, #101216 100%);
+    border: 1px solid var(--line); border-radius: 12px;
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; min-width: 140px; }
+  .filter-group label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mid); }
+  .filter-group select, .filter-group input {
+    padding: 8px 10px; background: rgba(255,255,255,0.02);
+    border: 1px solid var(--line); border-radius: 7px;
+    color: var(--text-hi); font-family: inherit; font-size: 12px;
+  }
+  .filter-group select:focus, .filter-group input:focus { outline: none; border-color: var(--platinum); }
+  .filter-group.hidden { display: none; }
+  .filter-clear {
+    align-self: flex-end; padding: 8px 14px; background: transparent;
+    border: 1px solid var(--line); border-radius: 7px;
+    color: var(--text-mid); font-family: inherit; font-size: 12px; cursor: pointer;
+  }
+  .filter-clear:hover { color: var(--text-hi); background: var(--platinum-dim); }
+
+  .results-summary { font-size: 12px; color: var(--text-mid); margin-bottom: 14px; }
+  .results-summary b { color: var(--text-hi); font-weight: 600; }
+
+  .results-table {
+    width: 100%; border-collapse: collapse;
+    background: linear-gradient(180deg, var(--panel) 0%, #101216 100%);
+    border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 12px;
+  }
+  .results-table th {
+    text-align: left; padding: 11px 14px;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-mid); border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.015); cursor: pointer; user-select: none;
+  }
+  .results-table th:hover { color: var(--text-hi); }
+  .results-table th .arrow { opacity: 0.5; margin-left: 4px; font-size: 9px; }
+  .results-table th.no-sort { cursor: default; }
+  .results-table td { padding: 12px 14px; border-bottom: 1px solid var(--line-soft); color: var(--text-hi); }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table td.num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+  .results-table th.num { text-align: right; }
+
+  .tag {
+    display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 4px;
+    background: var(--platinum-dim); color: var(--platinum); border: 1px solid var(--line);
+  }
+  .tag.private { background: rgba(168,134,214,0.1); color: #B5A4D6; border-color: rgba(168,134,214,0.2); }
+  .multiple-badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace; padding: 2px 6px; border-radius: 4px;
+    background: rgba(255,255,255,0.04); color: var(--text-mid);
+  }
+  .empty-state {
+    padding: 50px 20px; text-align: center;
+    border: 1px dashed var(--line); border-radius: 10px;
+    color: var(--text-mid); font-size: 13px;
+  }
+  .loading { padding: 60px 0; text-align: center; color: var(--text-low); font-size: 13px; }
+
+  .sector-section { margin-bottom: 18px; }
+  .sector-head {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, var(--panel-raised) 0%, var(--panel) 100%);
+    border: 1px solid var(--line); border-radius: 10px;
+    color: var(--text-hi); font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; user-select: none; text-align: left;
+    transition: border-color 140ms ease;
+  }
+  .sector-head:hover { border-color: rgba(255,255,255,0.14); }
+  .sector-head .chev { font-size: 10px; color: var(--text-mid); transition: transform 140ms ease; width: 12px; display: inline-block; }
+  .sector-section.collapsed .chev { transform: rotate(-90deg); }
+  .sector-head .sector-meta { margin-left: auto; font-size: 11px; font-weight: 400; color: var(--text-mid); font-family: 'IBM Plex Mono', monospace; white-space: nowrap; }
+  .sector-body { margin-top: 8px; }
+  .sector-section.collapsed .sector-body { display: none; }
+  .sector-empty {
+    padding: 16px; text-align: center;
+    border: 1px dashed var(--line); border-radius: 10px;
+    color: var(--text-low); font-size: 12px;
+  }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; }
+  .table-scroll .results-table { min-width: 600px; }
+
+  @media (max-width: 720px) {
+    .main { padding: 16px 12px 48px; }
+    .header { padding: 0 14px; }
+    .tab-bar { overflow-x: auto; }
+    .filters-bar { gap: 8px; padding: 12px; }
+    .filter-group { min-width: calc(50% - 8px); flex: 1 1 calc(50% - 8px); }
+    .filter-group select, .filter-group input { font-size: 16px; padding: 10px; }
+    .tab-btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
+    .sector-head { padding: 12px; font-size: 12px; }
+    .sector-head .sector-meta { font-size: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="dashboard.html" class="icon-btn" title="Back to dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  </a>
+  <div class="brand-mark">mdg<span class="dot" aria-hidden="true"></span></div>
+  <div class="page-title">Deal Tracker</div>
+  <div class="header-spacer"></div>
+  <button class="signout" id="signout">Sign out</button>
+</header>
+
+<main class="main">
+
+  <div class="tab-bar" id="tab-bar">
+    <button class="tab-btn active" data-tab="all">All Deals <span class="tab-count" id="count-all">—</span></button>
+    <button class="tab-btn" data-tab="cap_raise">Capital Raising <span class="tab-count" id="count-cap_raise">—</span></button>
+    <button class="tab-btn" data-tab="ma">M&amp;A <span class="tab-count" id="count-ma">—</span></button>
+    <button class="tab-btn" data-tab="archive">Archive <span class="tab-count" id="count-archive">—</span></button>
+  </div>
+  <div class="archive-note" id="archive-note" style="display:none;">Deals added more than 24 months ago. They remain fully searchable here.</div>
+
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>Type</label>
+      <select id="f-type">
+        <option value="">All</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Stage</label>
+      <select id="f-stage"><option value="">All</option></select>
+    </div>
+    <div class="filter-group" id="fg-service">
+      <label>Service</label>
+      <select id="f-service"><option value="">All</option></select>
+    </div>
+    <div class="filter-group">
+      <label>Sector / Industry</label>
+      <input type="text" id="f-sector" placeholder="e.g. Healthcare">
+    </div>
+    <div class="filter-group">
+      <label>Search name / ticker</label>
+      <input type="text" id="f-search" placeholder="Type to search…">
+    </div>
+    <button class="filter-clear" id="clear-filters">Clear filters</button>
+  </div>
+
+  <div class="results-summary" id="results-summary">Loading…</div>
+
+  <div id="results-wrap">
+    <div class="loading">Loading deals…</div>
+  </div>
+</main>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function() {
+  var cfg = window.MDG_CONFIG || {};
+  if (typeof window.supabase === 'undefined') {
+    document.body.innerHTML = '<div style="color:#E58B8B;padding:60px;text-align:center;font-family:sans-serif;">Supabase library failed to load. Refresh.</div>';
+    return;
+  }
+  var client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+
+  var ARCHIVE_MONTHS = cfg.ARCHIVE_MONTHS || 24;
+  var archiveCutoff = (function() {
+    var d = new Date();
+    d.setMonth(d.getMonth() - ARCHIVE_MONTHS);
+    return d;
+  })();
+  function isArchived(c) {
+    if (!c.created_at) return false;
+    var d = new Date(c.created_at);
+    return !isNaN(d) && d < archiveCutoff;
+  }
+
+  var SECTOR_RULES = [
+    { name: 'Healthcare',     re: /health|medic|pharma|bio|hospital|telehealth|life scien|drug|dental|diagnostic|clinic/ },
+    { name: 'Infrastructure', re: /infrastruct|utilit|construction|transport|rail|road|bridge|pipeline|water|waste|telecom|engineering|airport|port\b/ },
+    { name: 'Financials',     re: /financ|bank|insur|fintech|capital market|asset manage|lending|payment|credit/ },
+    { name: 'Technology',     re: /tech|software|saas|semiconductor|internet|cloud|cyber|artificial intel|\bai\b|data|computer|electronic/ },
+    { name: 'Energy',         re: /energy|oil|gas|solar|renewable|wind|power|electric/ },
+    { name: 'Consumer',       re: /consumer|retail|restaurant|commerce|apparel|food|beverage|media|entertainment|hospitality|leisure/ },
+    { name: 'Industrials',    re: /industrial|manufactur|aerospace|defense|defence|machinery|logistics|chemical|material|mining|agricult/ }
+  ];
+  var ALWAYS_SHOW_SECTORS = ['Healthcare', 'Infrastructure'];
+  function sectorBucket(c) {
+    var hay = ((c.sector || '') + ' ' + (c.industry || '')).toLowerCase();
+    for (var i = 0; i < SECTOR_RULES.length; i++) {
+      if (SECTOR_RULES[i].re.test(hay)) return SECTOR_RULES[i].name;
+    }
+    return 'Other';
+  }
+  function collapsedSectors() {
+    try { return JSON.parse(localStorage.getItem('mdg_tracker_collapsed') || '[]'); }
+    catch (e) { return []; }
+  }
+  function toggleSectorCollapse(name) {
+    var list = collapsedSectors();
+    var idx = list.indexOf(name);
+    if (idx === -1) list.push(name); else list.splice(idx, 1);
+    try { localStorage.setItem('mdg_tracker_collapsed', JSON.stringify(list)); } catch (e) {}
+  }
+
+  function esc(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, function(c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmtNum(n) {
+    n = Number(n);
+    if (!isFinite(n)) return '—';
+    if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+    if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+    if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+    return String(n);
+  }
+
+  function renderTypeCell(c) {
+    return '<span class="tag' + (c.company_type === 'private' ? ' private' : '') + '">' + esc(c.company_type) + '</span>';
+  }
+  function renderCompanyCell(c) {
+    var t = c.ticker ? ' <span style="color:var(--text-low);font-family:\'IBM Plex Mono\',monospace;font-size:10px;">' + esc(c.ticker) + '</span>' : '';
+    return '<span style="font-weight:600">' + esc(c.name) + '</span>' + t;
+  }
+  function renderStageCell(c) {
+    return esc(state.stageMap[c.deal_stage] || c.deal_stage || '—');
+  }
+  function renderServiceCell(c) {
+    return esc(state.serviceMap[c.service_type] || c.service_type || '—');
+  }
+  function renderSectorCell(c) {
+    return esc(c.sector || c.industry || '—');
+  }
+  function renderDealSizeCell(c) {
+    return c.deal_size != null ? '$' + fmtNum(c.deal_size) : '—';
+  }
+  function renderRevenueCell(c) {
+    return c.revenue != null ? '$' + fmtNum(c.revenue) : '—';
+  }
+  function renderEvRevCell(c) {
+    if (c.deal_size == null || !c.revenue || Number(c.revenue) === 0) return '—';
+    var mult = Number(c.deal_size) / Number(c.revenue);
+    if (!isFinite(mult) || mult <= 0) return '—';
+    return '<span class="multiple-badge">' + mult.toFixed(1) + 'x</span>';
+  }
+  function renderAddedCell(c) {
+    if (!c.created_at) return '—';
+    var d = new Date(c.created_at);
+    if (isNaN(d)) return '—';
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
+  }
+
+  var COLUMN_CONFIGS = {
+    all: [
+      { label: 'Type',      sort: 'type',      render: renderTypeCell },
+      { label: 'Company',   sort: 'name',      render: renderCompanyCell },
+      { label: 'Stage',     sort: 'stage',     render: renderStageCell },
+      { label: 'Service',                      render: renderServiceCell },
+      { label: 'Sector',                       render: renderSectorCell },
+      { label: 'Deal Size', sort: 'deal_size', render: renderDealSizeCell, cls: 'num' },
+      { label: 'Added',     sort: 'added',     render: renderAddedCell }
+    ],
+    cap_raise: [
+      { label: 'Type',         sort: 'type',      render: renderTypeCell },
+      { label: 'Company',      sort: 'name',      render: renderCompanyCell },
+      { label: 'Stage',        sort: 'stage',     render: renderStageCell },
+      { label: 'Sector',                          render: renderSectorCell },
+      { label: 'Target Raise', sort: 'deal_size', render: renderDealSizeCell, cls: 'num' },
+      { label: 'Revenue',                         render: renderRevenueCell,  cls: 'num' }
+    ],
+    ma: [
+      { label: 'Type',           sort: 'type',      render: renderTypeCell },
+      { label: 'Company',        sort: 'name',      render: renderCompanyCell },
+      { label: 'Stage',          sort: 'stage',     render: renderStageCell },
+      { label: 'Sector',                            render: renderSectorCell },
+      { label: 'Deal Size / EV', sort: 'deal_size', render: renderDealSizeCell, cls: 'num' },
+      { label: 'Revenue',                           render: renderRevenueCell,  cls: 'num' },
+      { label: 'EV / Rev',                          render: renderEvRevCell,    cls: 'num' }
+    ]
+  };
+
+  var state = {
+    companies: [], stages: [], services: [],
+    stageMap: {}, serviceMap: {},
+    sortKey: 'name', sortDir: 'asc', activeTab: 'all'
+  };
+  var tabServiceKeys = { cap_raise: [], ma: [] };
+
+  init();
+
+  async function init() {
+    var sess = await client.auth.getSession();
+    if (!sess.data.session) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    var stagesRes   = await client.from('deal_stages').select('key, label, sort_order').order('sort_order');
+    var servicesRes = await client.from('service_types').select('key, label, sort_order').order('sort_order');
+    state.stages   = stagesRes.data   || [];
+    state.services = servicesRes.data || [];
+    state.stages.forEach(function(s)   { state.stageMap[s.key]   = s.label; });
+    state.services.forEach(function(s) { state.serviceMap[s.key] = s.label; });
+
+    state.services.forEach(function(s) {
+      var lbl = (s.label || '').toLowerCase();
+      if (lbl.indexOf('capital') !== -1 || lbl.indexOf('raise') !== -1 || lbl.indexOf('refinanc') !== -1) {
+        tabServiceKeys.cap_raise.push(s.key);
+      }
+      if (lbl.indexOf('m&a') !== -1 || lbl.indexOf('merger') !== -1 || lbl.indexOf('acquisition') !== -1) {
+        tabServiceKeys.ma.push(s.key);
+      }
+    });
+
+    var stageSel = document.getElementById('f-stage');
+    state.stages.forEach(function(s) {
+      var opt = document.createElement('option');
+      opt.value = s.key; opt.textContent = s.label;
+      stageSel.appendChild(opt);
+    });
+    var serviceSel = document.getElementById('f-service');
+    state.services.forEach(function(s) {
+      var opt = document.createElement('option');
+      opt.value = s.key; opt.textContent = s.label;
+      serviceSel.appendChild(opt);
+    });
+
+    await loadCompanies();
+    wireUp();
+  }
+
+  async function loadCompanies() {
+    var res = await client
+      .from('companies')
+      .select('id, name, company_type, ticker, exchange, sector, industry, deal_stage, service_type, deal_size, revenue, ebitda, market_cap, created_at');
+
+    if (res.error) {
+      document.getElementById('results-wrap').innerHTML =
+        '<div class="empty-state"><div>Could not load deals: ' + esc(res.error.message) + '</div></div>';
+      return;
+    }
+    state.companies = res.data || [];
+    updateTabCounts();
+    applyFilters();
+  }
+
+  function updateTabCounts() {
+    var live = state.companies.filter(function(c) { return !isArchived(c); });
+    var arch = state.companies.length - live.length;
+    var cr  = live.filter(function(c) { return tabServiceKeys.cap_raise.indexOf(c.service_type) !== -1; }).length;
+    var ma  = live.filter(function(c) { return tabServiceKeys.ma.indexOf(c.service_type) !== -1; }).length;
+    document.getElementById('count-all').textContent       = live.length;
+    document.getElementById('count-cap_raise').textContent = cr;
+    document.getElementById('count-ma').textContent        = ma;
+    document.getElementById('count-archive').textContent   = arch;
+  }
+
+  function applyFilters() {
+    var type    = document.getElementById('f-type').value;
+    var stage   = document.getElementById('f-stage').value;
+    var service = document.getElementById('f-service').value;
+    var sector  = document.getElementById('f-sector').value.trim().toLowerCase();
+    var search  = document.getElementById('f-search').value.trim().toLowerCase();
+
+    var filtered = state.companies.filter(function(c) {
+      if (state.activeTab === 'archive') {
+        if (!isArchived(c)) return false;
+        if (service && c.service_type !== service) return false;
+      } else if (isArchived(c)) {
+        return false;
+      } else if (state.activeTab === 'cap_raise') {
+        if (tabServiceKeys.cap_raise.indexOf(c.service_type) === -1) return false;
+      } else if (state.activeTab === 'ma') {
+        if (tabServiceKeys.ma.indexOf(c.service_type) === -1) return false;
+      } else {
+        if (service && c.service_type !== service) return false;
+      }
+      if (type  && c.company_type !== type)  return false;
+      if (stage && c.deal_stage   !== stage) return false;
+      if (sector) {
+        var hay = ((c.sector || '') + ' ' + (c.industry || '')).toLowerCase();
+        if (hay.indexOf(sector) === -1) return false;
+      }
+      if (search) {
+        var hay2 = ((c.name || '') + ' ' + (c.ticker || '')).toLowerCase();
+        if (hay2.indexOf(search) === -1) return false;
+      }
+      return true;
+    });
+
+    filtered.sort(function(a, b) {
+      var av = sortValue(a, state.sortKey);
+      var bv = sortValue(b, state.sortKey);
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      if (av < bv) return state.sortDir === 'asc' ? -1 : 1;
+      if (av > bv) return state.sortDir === 'asc' ?  1 : -1;
+      return 0;
+    });
+
+    renderResults(filtered);
+  }
+
+  function sortValue(c, key) {
+    if (key === 'name')      return (c.name || '').toLowerCase();
+    if (key === 'type')      return c.company_type;
+    if (key === 'stage')     return c.deal_stage || '';
+    if (key === 'deal_size') return c.deal_size != null ? Number(c.deal_size) : null;
+    if (key === 'added')     return c.created_at || '';
+    return '';
+  }
+
+  function renderResults(list) {
+    var summary = document.getElementById('results-summary');
+    var scopeTotal = state.companies.filter(function(c) {
+      return state.activeTab === 'archive' ? isArchived(c) : !isArchived(c);
+    }).length;
+    summary.innerHTML = 'Showing <b>' + list.length + '</b> of <b>' + scopeTotal + '</b> ' +
+      (state.activeTab === 'archive' ? 'archived deals' : 'deals (last ' + ARCHIVE_MONTHS + ' months)');
+
+    var wrap = document.getElementById('results-wrap');
+    var cols = COLUMN_CONFIGS[state.activeTab] || COLUMN_CONFIGS.all;
+
+    var groups = {};
+    list.forEach(function(c) {
+      var key = sectorBucket(c);
+      (groups[key] = groups[key] || []).push(c);
+    });
+
+    var names = Object.keys(groups);
+    if (state.activeTab !== 'archive') {
+      ALWAYS_SHOW_SECTORS.forEach(function(s) {
+        if (names.indexOf(s) === -1) { names.push(s); groups[s] = []; }
+      });
+    }
+    names.sort(function(a, b) {
+      var ia = ALWAYS_SHOW_SECTORS.indexOf(a), ib = ALWAYS_SHOW_SECTORS.indexOf(b);
+      if (ia !== -1 || ib !== -1) {
+        if (ia === -1) return 1;
+        if (ib === -1) return -1;
+        return ia - ib;
+      }
+      if (a === 'Other') return 1;
+      if (b === 'Other') return -1;
+      return (groups[b].length - groups[a].length) || a.localeCompare(b);
+    });
+
+    if (list.length === 0 && state.activeTab === 'archive') {
+      wrap.innerHTML = '<div class="empty-state"><div>No archived deals</div><div>Deals move here automatically ' + ARCHIVE_MONTHS + ' months after being added.</div></div>';
+      return;
+    }
+
+    function arrow(sortKey) {
+      if (state.sortKey !== sortKey) return '';
+      return '<span class="arrow">' + (state.sortDir === 'asc' ? '▲' : '▼') + '</span>';
+    }
+    var ths = cols.map(function(col) {
+      var cls = (col.cls === 'num' ? ' class="num' + (col.sort ? '' : ' no-sort') + '"' : (!col.sort ? ' class="no-sort"' : ''));
+      var sortAttr = col.sort ? ' data-sort="' + col.sort + '"' : '';
+      return '<th' + cls + sortAttr + '>' + col.label + (col.sort ? arrow(col.sort) : '') + '</th>';
+    }).join('');
+
+    var collapsed = collapsedSectors();
+    var html = names.map(function(name) {
+      var deals = groups[name];
+      var pipeline = deals.reduce(function(sum, c) {
+        return sum + (c.deal_size != null && isFinite(Number(c.deal_size)) ? Number(c.deal_size) : 0);
+      }, 0);
+      var meta = deals.length + (deals.length === 1 ? ' deal' : ' deals') +
+        (pipeline > 0 ? ' · $' + fmtNum(pipeline) + ' pipeline' : '');
+
+      var body;
+      if (deals.length === 0) {
+        body = '<div class="sector-empty">No ' + esc(name) + ' deals yet</div>';
+      } else {
+        var rows = deals.map(function(c) {
+          var tds = cols.map(function(col) {
+            var tdCls = col.cls ? ' class="' + col.cls + '"' : '';
+            return '<td' + tdCls + '>' + col.render(c) + '</td>';
+          }).join('');
+          return '<tr data-id="' + c.id + '">' + tds + '</tr>';
+        }).join('');
+        body = '<div class="table-scroll"><table class="results-table">' +
+          '<thead><tr>' + ths + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+      }
+
+      var isCollapsed = collapsed.indexOf(name) !== -1;
+      return '<div class="sector-section' + (isCollapsed ? ' collapsed' : '') + '" data-sector="' + esc(name) + '">' +
+        '<button class="sector-head" type="button">' +
+          '<span class="chev">▼</span>' + esc(name) +
+          '<span class="sector-meta">' + esc(meta) + '</span>' +
+        '</button>' +
+        '<div class="sector-body">' + body + '</div>' +
+      '</div>';
+    }).join('');
+
+    wrap.innerHTML = html || '<div class="empty-state"><div>No deals match these filters</div><div>Try clearing one or more filters.</div></div>';
+
+    Array.prototype.forEach.call(wrap.querySelectorAll('.sector-head'), function(btn) {
+      btn.addEventListener('click', function() {
+        var section = btn.parentNode;
+        section.classList.toggle('collapsed');
+        toggleSectorCollapse(section.dataset.sector);
+      });
+    });
+
+    Array.prototype.forEach.call(wrap.querySelectorAll('th[data-sort]'), function(th) {
+      th.addEventListener('click', function() {
+        var key = th.dataset.sort;
+        if (state.sortKey === key) {
+          state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          state.sortKey = key;
+          state.sortDir = 'asc';
+        }
+        applyFilters();
+      });
+    });
+  }
+
+  function wireUp() {
+    ['f-type', 'f-stage', 'f-service'].forEach(function(id) {
+      document.getElementById(id).addEventListener('change', applyFilters);
+    });
+    ['f-sector', 'f-search'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', applyFilters);
+    });
+
+    document.getElementById('clear-filters').addEventListener('click', function() {
+      document.getElementById('f-type').value    = '';
+      document.getElementById('f-stage').value   = '';
+      document.getElementById('f-service').value = '';
+      document.getElementById('f-sector').value  = '';
+      document.getElementById('f-search').value  = '';
+      applyFilters();
+    });
+
+    document.getElementById('signout').addEventListener('click', async function() {
+      await client.auth.signOut();
+      window.location.href = 'index.html';
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.activeTab = btn.dataset.tab;
+        state.sortKey   = 'name';
+        state.sortDir   = 'asc';
+
+        var fgService = document.getElementById('fg-service');
+        if (state.activeTab === 'all' || state.activeTab === 'archive') {
+          fgService.classList.remove('hidden');
+        } else {
+          fgService.classList.add('hidden');
+          document.getElementById('f-service').value = '';
+        }
+
+        document.getElementById('archive-note').style.display =
+          state.activeTab === 'archive' ? 'block' : 'none';
+
+        applyFilters();
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
