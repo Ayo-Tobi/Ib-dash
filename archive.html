@@ -3,20 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(localStorage.getItem("ibdash_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
+<meta name="theme-color" content="#f6f7f9" id="themeColorMeta">
 <title>IB Deal Command — Deal Archive</title>
 <style>
 :root { color-scheme: light;
   --navy:#0f2747; --ink:#1a1f29; --mut:#5b6675; --line:#e3e7ee;
-  --bg:#f6f7f9; --card:#fff; --link:#1a56db; --gold:#b78b2e;
+  --bg:#f6f7f9; --card:#fff; --card2:#f9fafc; --link:#1a56db; --gold:#b78b2e;
+  --border:#cdd4df; --input-bg:#fff; --tab-bg:#fff; --tab-ink:#33404f;
+}
+html[data-theme="dark"] { color-scheme: dark;
+  --navy:#8fb8ff; --ink:#e8eaed; --mut:#8a94a3; --line:#23262c;
+  --bg:#000; --card:#111318; --card2:#181b21; --link:#7db2ff; --gold:#e0b559;
+  --border:#2c313b; --input-bg:#15181e; --tab-bg:#15181e; --tab-ink:#c3c9d2;
 }
 * { box-sizing:border-box; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.45; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.45; transition:background .15s,color .15s; }
 .wrap { max-width:1280px; margin:0 auto; padding:14px 14px 28px; }
+.topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
 h1 { font-size:clamp(17px,4vw,22px); margin:0; color:var(--navy); }
 .sub { font-size:12px; color:var(--mut); margin:3px 0 14px; }
 .sub a { color:var(--link); text-decoration:none; font-weight:600; }
+.btn { font-size:13px; font-weight:600; padding:8px 14px; border-radius:999px; border:1px solid var(--border); background:var(--tab-bg); color:var(--tab-ink); cursor:pointer; white-space:nowrap; }
 .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
-select, input[type=search] { font-size:13px; padding:8px 10px; border:1px solid #cdd4df; border-radius:8px; background:#fff; color:var(--ink); }
+select, input[type=search] { font-size:13px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:var(--input-bg); color:var(--ink); }
 input[type=search] { flex:1 1 160px; min-width:0; }
 .count { font-size:11.5px; color:var(--mut); margin:0 0 8px 2px; }
 .tag { display:inline-block; font-size:10px; padding:2px 7px; border-radius:5px; font-weight:600; white-space:nowrap; background:#eef1f6; color:#33404f; }
@@ -28,17 +38,22 @@ input[type=search] { flex:1 1 160px; min-width:0; }
 table { border-collapse:collapse; width:100%; font-size:12px; min-width:760px; }
 th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--mut); padding:8px 10px; border-bottom:1px solid var(--line); background:var(--card); white-space:nowrap; }
 td { padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
-tr:hover td { background:#f9fafc; }
+tr:hover td { background:var(--card2); }
 .t { font-weight:600; color:var(--navy); }
 a.src { color:var(--link); text-decoration:none; }
-.empty { padding:28px; text-align:center; color:var(--mut); font-size:13px; background:var(--card); border:1px dashed #cdd4df; border-radius:10px; }
+.empty { padding:28px; text-align:center; color:var(--mut); font-size:13px; background:var(--card); border:1px dashed var(--border); border-radius:10px; }
 footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); padding-top:12px; margin-top:20px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Deal Archive</h1>
-  <div class="sub">Deals aged out of the rolling 24-month window · nothing is deleted · <a href="index.html">← Back to live dashboard</a></div>
+  <div class="topbar">
+    <div>
+      <h1>Deal Archive</h1>
+      <div class="sub">Deals aged out of the rolling 24-month window · nothing is deleted · <a href="index.html">← Back to live dashboard</a></div>
+    </div>
+    <button id="themeToggle" class="btn" title="Switch color theme">Dark mode</button>
+  </div>
   <div class="filters">
     <input type="search" id="q" placeholder="Search target, acquirer, advisor…">
     <select id="sector"><option value="">All sectors</option></select>
@@ -49,10 +64,12 @@ footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); pad
   <footer>Internal work product — Mars deal intelligence. Sources cited per deal. No investment advice.</footer>
 </div>
 <script>
-const DATA = {"description": "Deals aged out of the rolling 24-month window. Never deleted.", "deals": [{"date": "2024-07-07", "target": "Paramount Global", "acquirer": "Skydance Media (Ellison family / RedBird Capital)", "sector": "Media & Telecom", "region": "North America", "value": "~$8B transaction (incl. $2.4B for National Amusements + $4.5B to shareholders + $1.5B balance sheet)", "consideration": "Cash & stock (two-step merger)", "multiple": "n/d", "status": "Closed Aug 2025 (renamed Paramount Skydance); retained past 24-month window as strategically instructive (predicate to WBD bid)", "sellFin": "Centerview Partners (Paramount special committee)", "sellLegal": "Cravath, Swaine & Moore (special committee)", "buyFin": "n/d", "buyLegal": "Latham & Watkins (to Skydance)", "sourceName": "TheWrap media M&A recap — upgrade to primary on next run", "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/", "rationale": "Recapitalizes Paramount and hands Ellison control via National Amusements; studio and streaming turnaround thesis."}, {"date": "2024-07-01", "target": "Spirit AeroSystems", "acquirer": "The Boeing Company", "sector": "Industrials", "region": "North America", "value": "$4.7B equity ($37.25/share; ~$8.3B incl. assumed debt)", "consideration": "All-stock (Airbus taking select European sites in parallel)", "multiple": "n/d", "status": "Closed 2025 (vertical re-integration of fuselage supply); retained past 24-month window as strategically instructive", "sellFin": "n/d", "sellLegal": "n/d", "buyFin": "n/d", "buyLegal": "n/d", "sourceName": "Intellizence top-10 2024", "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/", "rationale": "Vertical re-integration of fuselage supply after quality crises; Airbus takes select European sites in parallel (per release)."}], "lastUpdated": "2026-07-19", "count": 2};
+const DATA = {"description": "Deals aged out of the rolling 24-month window. Never deleted.", "deals": [{"date": "2024-07-07", "target": "Paramount Global", "acquirer": "Skydance Media (Ellison family / RedBird Capital)", "sector": "Media & Telecom", "region": "North America", "value": "~$8B transaction (incl. $2.4B for National Amusements + $4.5B to shareholders + $1.5B balance sheet)", "consideration": "Cash & stock (two-step merger)", "multiple": "n/d", "status": "Closed Aug 2025 (renamed Paramount Skydance); retained past 24-month window as strategically instructive (predicate to WBD bid)", "sellFin": "Centerview Partners (Paramount special committee)", "sellLegal": "Cravath, Swaine & Moore (special committee)", "buyFin": "n/d", "buyLegal": "Latham & Watkins (to Skydance)", "sourceName": "TheWrap media M&A recap — upgrade to primary on next run", "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/", "rationale": "Recapitalizes Paramount and hands Ellison control via National Amusements; studio and streaming turnaround thesis."}, {"date": "2024-07-01", "target": "Spirit AeroSystems", "acquirer": "The Boeing Company", "sector": "Industrials", "region": "North America", "value": "$4.7B equity ($37.25/share; ~$8.3B incl. assumed debt)", "consideration": "All-stock (Airbus taking select European sites in parallel)", "multiple": "n/d", "status": "Closed 2025 (vertical re-integration of fuselage supply); retained past 24-month window as strategically instructive", "sellFin": "n/d", "sellLegal": "n/d", "buyFin": "n/d", "buyLegal": "n/d", "sourceName": "Intellizence top-10 2024", "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/", "rationale": "Vertical re-integration of fuselage supply after quality crises; Airbus takes select European sites in parallel (per release)."}], "lastUpdated": "2026-07-20", "count": 2};
 const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const sKey = s => "s-" + s.replace(/[^A-Za-z]/g,"");
 let q = "", sector = "", year = "";
+let theme = "light";
+try { theme = localStorage.getItem("ibdash_theme") || "light"; } catch(e) {}
 
 const sectors = [...new Set(DATA.deals.map(d => d.sector))].sort();
 sectors.forEach(s => { const o=document.createElement("option"); o.value=s; o.textContent=s; document.getElementById("sector").appendChild(o); });
@@ -62,6 +79,16 @@ years.forEach(y => { const o=document.createElement("option"); o.value=y; o.text
 document.getElementById("q").oninput = e => { q = e.target.value.toLowerCase(); render(); };
 document.getElementById("sector").onchange = e => { sector = e.target.value; render(); };
 document.getElementById("year").onchange = e => { year = e.target.value; render(); };
+
+const tt = document.getElementById("themeToggle");
+const themeMeta = document.getElementById("themeColorMeta");
+function syncTT(){
+  tt.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+  if (theme === "dark") { document.documentElement.setAttribute("data-theme","dark"); themeMeta.setAttribute("content","#000000"); }
+  else { document.documentElement.removeAttribute("data-theme"); themeMeta.setAttribute("content","#f6f7f9"); }
+}
+tt.onclick = () => { theme = theme === "dark" ? "light" : "dark"; try { localStorage.setItem("ibdash_theme", theme); } catch(e) {} syncTT(); };
+syncTT();
 
 function render(){
   const rows = DATA.deals.filter(d =>
