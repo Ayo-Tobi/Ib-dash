@@ -64,7 +64,7 @@ footer { font-size:11px; color:var(--mut); border-top:1px solid var(--line); pad
   <footer>Internal work product — Mars deal intelligence. Sources cited per deal. No investment advice.</footer>
 </div>
 <script>
-const DATA = {"description": "Deals aged out of the rolling 24-month window. Never deleted.", "deals": [{"date": "2024-07-07", "target": "Paramount Global", "acquirer": "Skydance Media (Ellison family / RedBird Capital)", "sector": "Media & Telecom", "region": "North America", "value": "~$8B transaction (incl. $2.4B for National Amusements + $4.5B to shareholders + $1.5B balance sheet)", "consideration": "Cash & stock (two-step merger)", "multiple": "n/d", "status": "Closed Aug 2025 (renamed Paramount Skydance); retained past 24-month window as strategically instructive (predicate to WBD bid)", "sellFin": "Centerview Partners (Paramount special committee)", "sellLegal": "Cravath, Swaine & Moore (special committee)", "buyFin": "n/d", "buyLegal": "Latham & Watkins (to Skydance)", "sourceName": "TheWrap media M&A recap — upgrade to primary on next run", "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/", "rationale": "Recapitalizes Paramount and hands Ellison control via National Amusements; studio and streaming turnaround thesis."}, {"date": "2024-07-01", "target": "Spirit AeroSystems", "acquirer": "The Boeing Company", "sector": "Industrials", "region": "North America", "value": "$4.7B equity ($37.25/share; ~$8.3B incl. assumed debt)", "consideration": "All-stock (Airbus taking select European sites in parallel)", "multiple": "n/d", "status": "Closed 2025 (vertical re-integration of fuselage supply); retained past 24-month window as strategically instructive", "sellFin": "n/d", "sellLegal": "n/d", "buyFin": "n/d", "buyLegal": "n/d", "sourceName": "Intellizence top-10 2024", "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/", "rationale": "Vertical re-integration of fuselage supply after quality crises; Airbus takes select European sites in parallel (per release)."}], "lastUpdated": "2026-07-20", "count": 2};
+const DATA = {"description": "Deals aged out of the rolling 24-month window. Never deleted.", "deals": [{"date": "2024-07-07", "target": "Paramount Global", "acquirer": "Skydance Media (Ellison family / RedBird Capital)", "sector": "Media & Telecom", "region": "North America", "value": "~$8B transaction (incl. $2.4B for National Amusements + $4.5B to shareholders + $1.5B balance sheet)", "consideration": "Cash & stock (two-step merger)", "multiple": "n/d", "status": "Closed Aug 2025 (renamed Paramount Skydance); retained past 24-month window as strategically instructive (predicate to WBD bid)", "sellFin": "Centerview Partners (Paramount special committee)", "sellLegal": "Cravath, Swaine & Moore (special committee)", "buyFin": "n/d", "buyLegal": "Latham & Watkins (to Skydance)", "sourceName": "TheWrap media M&A recap — upgrade to primary on next run", "sourceUrl": "https://www.thewrap.com/industry-news/business/hollywood-mergers-acquisitions-2025-recap-warner-bros/", "rationale": "Recapitalizes Paramount and hands Ellison control via National Amusements; studio and streaming turnaround thesis.", "targetStatus": "", "preDealPrice": "n/d (pending enrichment)", "premiumPct": "n/d (pending enrichment)", "acquirerReaction": "n/d (pending enrichment)"}, {"date": "2024-07-01", "target": "Spirit AeroSystems", "acquirer": "The Boeing Company", "sector": "Industrials", "region": "North America", "value": "$4.7B equity ($37.25/share; ~$8.3B incl. assumed debt)", "consideration": "All-stock (Airbus taking select European sites in parallel)", "multiple": "n/d", "status": "Closed 2025 (vertical re-integration of fuselage supply); retained past 24-month window as strategically instructive", "sellFin": "n/d", "sellLegal": "n/d", "buyFin": "n/d", "buyLegal": "n/d", "sourceName": "Intellizence top-10 2024", "sourceUrl": "https://intellizence.com/insights/merger-and-acquisition/top-10-largest-merger-and-acquisition-ma-deals-2024/", "rationale": "Vertical re-integration of fuselage supply after quality crises; Airbus takes select European sites in parallel (per release).", "targetStatus": "", "preDealPrice": "n/d (pending enrichment)", "premiumPct": "n/d (pending enrichment)", "acquirerReaction": "n/d (pending enrichment)"}], "lastUpdated": "2026-07-23", "count": 2};
 const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const sKey = s => "s-" + s.replace(/[^A-Za-z]/g,"");
 let q = "", sector = "", year = "";
@@ -90,6 +90,14 @@ function syncTT(){
 tt.onclick = () => { theme = theme === "dark" ? "light" : "dark"; try { localStorage.setItem("ibdash_theme", theme); } catch(e) {} syncTT(); };
 syncTT();
 
+function premiumShort(d){
+  if (d.targetStatus === "private" || d.targetStatus === "carve-out") return "n/a";
+  const p = d.premiumPct || "";
+  if (!p || p.startsWith("n/d")) return "n/d";
+  const m = p.match(/[\d.]+%/);
+  return m ? m[0] : p.slice(0,18);
+}
+
 function render(){
   const rows = DATA.deals.filter(d =>
     (!sector || d.sector === sector) &&
@@ -104,11 +112,12 @@ function render(){
     '<td><span class="tag '+sKey(d.sector)+'">'+esc(d.sector)+'</span></td>'+
     '<td style="white-space:nowrap">'+esc(d.region)+'</td>'+
     '<td>'+esc(d.value)+'</td>'+
+    '<td style="white-space:nowrap">'+esc(premiumShort(d))+'</td>'+
     '<td>'+esc(d.status)+'</td>'+
     '<td><a class="src" href="'+esc(d.sourceUrl)+'" target="_blank" rel="noopener">src</a></td></tr>'
   ).join("");
   document.getElementById("list").innerHTML =
-    '<div class="tblwrap"><table><thead><tr><th>Date</th><th>Deal</th><th>Sector</th><th>Region</th><th>Value</th><th>Status</th><th>Src</th></tr></thead><tbody>'+tr+'</tbody></table></div>';
+    '<div class="tblwrap"><table><thead><tr><th>Date</th><th>Deal</th><th>Sector</th><th>Region</th><th>Value</th><th>Premium</th><th>Status</th><th>Src</th></tr></thead><tbody>'+tr+'</tbody></table></div>';
 }
 render();
 </script>
